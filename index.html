@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday, Sayang! 🎉</title>
+    <!-- Kita pakai library konfeti gratisan yang ringan -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: #121214; color: #e1e1e6; margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow-x: hidden; }
+        .card { background: #202024; padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); width: 100%; max-width: 450px; text-align: center; border: 1px solid #323238; position: relative; }
+        h1 { color: #ff79c6; margin-bottom: 10px; font-size: 24px; }
+        p { color: #a8a8b3; font-size: 15px; line-height: 1.5; }
+        input { width: 100%; padding: 12px; margin: 15px 0; border-radius: 8px; border: 1px solid #41414c; background: #121214; color: #fff; text-align: center; font-size: 16px; }
+        button { background: #ff79c6; color: #121214; border: none; padding: 12px 24px; font-weight: bold; border-radius: 8px; cursor: pointer; transition: 0.3s; width: 100%; font-size: 16px; }
+        button:hover { background: #ff92d0; transform: translateY(-2px); }
+        .hidden { display: none !important; }
+        
+        /* Musik Control Minimalis */
+        .music-btn { background: #50fa7b; color: #121214; padding: 5px 10px; font-size: 12px; border-radius: 20px; width: auto; display: inline-block; margin-bottom: 15px; }
+
+        /* Polaroid Mini */
+        .polaroid { background: white; padding: 10px 10px 25px 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); transform: rotate(-3deg); margin: 20px auto; width: 200px; transition: 0.3s; }
+        .polaroid:hover { transform: rotate(0deg) scale(1.05); }
+        .polaroid img { width: 100%; height: 180px; object-fit: cover; filter: grayscale(20%); }
+        .polaroid .caption { color: #222; font-family: 'Courier New', Courier, monospace; font-weight: bold; font-size: 14px; margin-top: 10px; text-align: center; }
+
+        /* Dashboard Styles */
+        .gift-box { background: #29292e; padding: 15px; border-radius: 8px; margin: 15px 0; cursor: pointer; border-left: 5px solid #ff79c6; transition: 0.2s; text-align: left; }
+        .gift-box:hover { background: #323238; }
+        .roulette-box { background: #ff79c6; color: #121214; padding: 15px; border-radius: 8px; margin: 20px 0; font-weight: bold; font-size: 16px; min-height: 50px; display: flex; align-items: center; justify-content: center; }
+        
+        /* Evading Button Setup */
+        .btn-container { display: flex; justify-content: space-around; margin-top: 20px; position: relative; height: 60px; }
+        .btn-love { width: 40%; position: absolute; }
+        #btn-yes { left: 5%; }
+        #btn-no { right: 5%; background: #ff5555; color: white; transition: 0.1s; }
+    </style>
+</head>
+<body>
+
+    <!-- AUDIO ELEMENT (Ganti URL dengan lagu romantis pilihanmu) -->
+    <!-- Tips: Cari link mp3 langsung atau pakai link instrumen gratis -->
+    <audio id="bg-music" loop>
+        <source src="C:\Users\MyBook Hype AMD\Downloads\andriig-happy-birthday-471211.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- HALAMAN 1: GERBANG VERIFIKASI -->
+    <div id="login-page" class="card">
+        <h1>🔒 SECURITY CHECK</h1>
+        <p>Web ini dienkripsi khusus. Masukkan <b>Tanggal Jadian</b> kita untuk masuk (Format: DDMMYY, contoh: 150823)</p>
+        <input type="password" id="password-input" placeholder="Masukkan password rahasia...">
+        <button onclick="checkPassword()">AKSES MASUK</button>
+        <p id="error-msg" style="color: #ff5555; margin-top: 10px; font-weight: bold;" class="hidden"></p>
+    </div>
+
+    <!-- HALAMAN 2: UTAMA / DASHBOARD -->
+    <div id="main-page" class="card hidden">
+        <button id="music-toggle" class="music-btn" onclick="toggleMusic()">🎵 Matikan Musik</button>
+        
+        <h1>🎉 HAPPY BIRTHDAY, SAYANG! ❤️</h1>
+        <p>Selamat ulang tahun buat cowok ter-menyebalkan tapi paling aku sayang.</p>
+
+        <!-- FOTO POLAROID (Bisa diganti foto kalian bareng) -->
+        <div class="polaroid">
+            <!-- Kamu bisa ganti URL gambar ini pakai link foto kalian -->
+            <img src="C:\Users\MyBook Hype AMD\Pictures\lovee\Black Photo Collage motivational Quote Desktop Wallpaper.png" alt="Foto Kita">
+            <div class="caption">The Birthday Boy 🎂</div>
+        </div>
+        
+        <hr style="border: 0.5px solid #323238; margin: 20px 0;">
+
+        <!-- ROULETTE ALASAN SAYANG -->
+        <h3>✨ Kenapa aku sayang kamu?</h3>
+        <div id="roulette-text" class="roulette-box">Klik tombol di bawah buat tahu alasannya!</div>
+        <button onclick="putarAlasan()" style="background: #8be9fd;">Klik Aku! 🎲</button>
+
+        <!-- KOTAK SURAT RAHASIA -->
+        <h3>🎁 Klik untuk buka surat:</h3>
+        <div class="gift-box" onclick="bukaSurat(1)">📩 Surat Saat Kamu Lagi Capek</div>
+        <div class="gift-box" onclick="bukaSurat(2)">📩 Surat Saat Kamu Lagi Kangen Aku</div>
+
+        <hr style="border: 0.5px solid #323238; margin: 20px 0;">
+
+        <!-- GAME TOMBOL JEBAKAN -->
+        <div id="question-container">
+            <h3>Terakhir... Do you love me? 🥺</h3>
+            <div class="btn-container">
+                <button id="btn-yes" class="btn-love" onclick="loveAnswer()">YES!</button>
+                <button id="btn-no" class="btn-love" onmouseover="hindariTombol()" onclick="hindariTombol()">NO</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // PENGATURAN PASSWORD (Ganti dengan tanggal jadian kalian)
+        const PASSWORD_BENAR = "171225"; 
+
+        const daftarAlasan = [
+            "Karena kamu sabar banget ngadepin aku kalau lagi pms 😤",
+            "Karena senyum kamu itu beneran bikin candu, tahu gak?! 🙄",
+            "Kamu itu pendengar terbaik kalau aku lagi ngedumel random ✨",
+            "Cara kamu ngusap kepala aku itu dapet poin bonus +1000000 💖",
+            "Soalnya cuma kamu yang tahu luar dalemnya randomnya aku wkwk",
+            "Karena kamu selalu usahain ada buat aku, makasih yaaa 🥰"
+        ];
+
+        const audio = document.getElementById('bg-music');
+
+        function checkPassword() {
+            const input = document.getElementById('password-input').value;
+            const error = document.getElementById('error-msg');
+            
+            if(input === PASSWORD_BENAR) {
+                document.getElementById('login-page').classList.add('hidden');
+                document.getElementById('main-page').classList.remove('hidden');
+                
+                // MAIN_KAN MUSIK & JALANKAN KONFETI
+                audio.play().catch(e => console.log("Autoplay dicegah browser, harus klik manual"));
+                sebarKonfeti();
+            } else {
+                error.classList.remove('hidden');
+                error.innerText = "❌ SALAH! Kamu penyusup ya?! Ngaku!";
+            }
+        }
+
+        function sebarKonfeti() {
+            // Efek konfeti durasi 3 detik
+            var duration = 3 * 1000;
+            var end = Date.now() + duration;
+
+            (function frame() {
+                confetti({
+                    particleCount: 3,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 }
+                });
+                confetti({
+                    particleCount: 3,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 }
+                });
+
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            }());
+        }
+
+        function toggleMusic() {
+            const btn = document.getElementById('music-toggle');
+            if (audio.paused) {
+                audio.play();
+                btn.innerText = "🎵 Matikan Musik";
+                btn.style.background = "#50fa7b";
+            } else {
+                audio.pause();
+                btn.innerText = "🔇 Nyalakan Musik";
+                btn.style.background = "#ff5555";
+                btn.style.color = "#fff";
+            }
+        }
+
+        function putarAlasan() {
+            const acak = daftarAlasan[Math.floor(Math.random() * daftarAlasan.length)];
+            document.getElementById('roulette-text').innerText = acak;
+            confetti({ particleCount: 20, spread: 30, origin: { y: 0.7 } }); // konfeti kecil tiap klik
+        }
+
+        function bukaSurat(id) {
+            if(id === 1) {
+                alert("💌 Pesan buat kamu yang lagi capek:\n\nSemangat ya sayangnya aku! Jangan lupa istirahat dan makan. Kalau dunia lagi ga ramah, inget ada aku di sini yang selalu dukung dan bangga sama kamu. Proud of you selalu! ❤️");
+            } else if(id === 2) {
+                alert("💌 Pesan buat kamu yang lagi kangen:\n\nHehe kangen yaaa? Samaan dong! Sini peluk online dulu 🤗. Nanti kalau ada waktu kita jalan dan cari makanan enak bareng lagi ya!");
+            }
+        }
+
+        function hindariTombol() {
+            const btnNo = document.getElementById('btn-no');
+            const x = Math.random() * 75;
+            const y = Math.random() * 35;
+            btnNo.style.right = x + "%";
+            btnNo.style.top = y + "px";
+        }
+
+        function loveAnswer() {
+            sebarKonfeti();
+            alert("I knew it! Kisss duluuuu 💋❤️ HBD Sayanggg!");
+            document.getElementById('question-container').innerHTML = "<h3>Yay! I love you moreee! 🥰❤️</h3>";
+        }
+    </script>
+</body>
+</html>
