@@ -151,18 +151,22 @@
         }
 
         function toggleMusic() {
-            const btn = document.getElementById('music-toggle');
-            if (audio.paused) {
-                audio.play();
-                btn.innerText = "🎵 Matikan Musik";
-                btn.style.background = "#50fa7b";
-            } else {
-                audio.pause();
-                btn.innerText = "🔇 Nyalakan Musik";
-                btn.style.background = "#ff5555";
-                btn.style.color = "#fff";
-            }
-        }
+    const btn = document.getElementById('music-toggle');
+    if (audio.paused) {
+        audio.play().then(() => {
+            btn.innerText = "🎵 Matikan Musik";
+            btn.style.background = "#50fa7b";
+            btn.style.color = "#121214";
+        }).catch(err => {
+            alert("Sentuh layar atau coba klik tombol ini sekali lagi untuk memicu musik ya!");
+        });
+    } else {
+        audio.pause();
+        btn.innerText = "🔇 Nyalakan Musik";
+        btn.style.background = "#ff5555";
+        btn.style.color = "#fff";
+    }
+}
 
         function putarAlasan() {
             const acak = daftarAlasan[Math.floor(Math.random() * daftarAlasan.length)];
